@@ -1,3 +1,5 @@
+//Je' Mara, John, Isaiah, Tyler
+
 package com.example.eyespeak
 
 import androidx.appcompat.app.AppCompatActivity
@@ -10,4 +12,3 @@ class MainActivity : AppCompatActivity() {
     }
 }
 
-//Jemara Smith 03-22-23.
