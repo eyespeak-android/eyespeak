@@ -1,5 +1,3 @@
-# eyespeak
-
 # Milestone 1 - EyeSpeak
 
 ## Table of Contents
@@ -17,10 +15,10 @@
 ### App Evaluation
 
 [Evaluation of your app across the following attributes]
-- **Category:**
+- **Category: Lifestyle/Productivity/Accessibility**
 - **Mobile: Android**
 - **Story:**
-- **Market:**
+- **Market: Those with low vision**
 - **Habit:**
 - **Scope:**
 
@@ -41,10 +39,13 @@
 ### 2. Screen Archetypes
 
 - [list first screen here]
-  - [list associated required story here]
+  - [log in/register screen]
   - ...
 - [list second screen here]
-  - [list associated required story here]
+  - [log in to camera/textbox or registration]
+  - ...
+ - [list third screen here]
+  - [camera/textbox or profile]
   - ...
 
 ### 3. Navigation
