@@ -30,13 +30,13 @@
 
 **Required Features**
 
-* [fill in your required user features here]
-* ...
+* Translating text from the camera cross-languages: the application uses OCR to capture text from a camera and translate it into the language selected by the user.
+* Giving voice responses: the application reads out the translated text using a voice selected by the user.
 
 **Stretch Features**
 
-* [fill in your optional user features here]
-* ...
+* Color schemes and styles for color blindness (deuteranopia, protanopia, and tritanopia)
+* Fully navigable by voice (menus, functions, selections, etc.)
 
 ### 2. Screen Archetypes
 
