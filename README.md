@@ -75,3 +75,4 @@
 <img src = "https://github.com/KingTechnician/eyespeak/blob/main/Screenshot%202023-03-23%20at%202.15.38%20PM.png" width=600>
 
 ### [BONUS] Interactive Prototype
+<img src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExOGVhYTYwZjNmMjA4OTcxMWQ3Y2YxNGY4NGZhMTcwYTEzMzAxMTMzZiZjdD1n/bRrQJJPfS1DnJoiauo/giphy.gif">
