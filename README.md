@@ -18,7 +18,7 @@
 
 [Evaluation of your app across the following attributes]
 - **Category:**
-- **Mobile:**
+- **Mobile: Android**
 - **Story:**
 - **Market:**
 - **Habit:**
