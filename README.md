@@ -44,7 +44,7 @@
 - [list second screen here]
   - [log in to camera/textbox or registration]
   - ...
- - [list third screen here]
+- [list third screen here]
   - [camera/textbox or profile]
   - ...
 
