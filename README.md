@@ -71,5 +71,6 @@
 
 ### [BONUS] Digital Wireframes & Mockups
 <img src="https://github.com/KingTechnician/eyespeak/blob/main/Screenshot%202023-03-23%20at%202.11.09%20PM.png" width=600>
+<img src = "https://github.com/KingTechnician/eyespeak/blob/main/Screenshot%202023-03-23%20at%202.15.38%20PM.png" width=600>
 
 ### [BONUS] Interactive Prototype
