@@ -4,14 +4,18 @@ import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
-class Register : AppCompatActivity() {
+
+class CameraTextbox : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.register)
-        val button: Button = findViewById(R.id.button2)
+        setContentView(R.layout.camera_textbox)
+        val button:Button = findViewById(R.id.button4)
         button.setOnClickListener {
-            val i = Intent(this@Register, CameraTextbox::class.java)
-            startActivity(i)
+            val intent = Intent(this@CameraTextbox, Profile::class.java)
+            startActivity(intent)
         }
     }
 }
+
+
+
