@@ -68,7 +68,7 @@
 ## Wireframes
 
 [Add picture of your hand sketched wireframes in this section]
-<img src="https://github.com/eyespeak-android/eyespeak/blob/main/IMG_6323.HEIC" width=600>
+<img src="https://github.com/eyespeak-android/eyespeak/blob/main/IMG_6323.jpg" width=600>
 
 ### [BONUS] Digital Wireframes & Mockups
 <img src="https://github.com/eyespeak-android/eyespeak/blob/main/EyeSpeak%20part1.png" width=600>
