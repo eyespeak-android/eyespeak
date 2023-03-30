@@ -14,6 +14,7 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.example.eyespeak.databinding.ActivityMainBinding
 import com.google.android.material.snackbar.Snackbar
+import android.Manifest
 
 class MainActivity : AppCompatActivity() {
     private lateinit var layout: View
@@ -23,7 +24,6 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         val view = binding.root
         //layout = binding.mainLayout
-
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         val button: Button = findViewById(R.id.button6)
@@ -31,8 +31,7 @@ class MainActivity : AppCompatActivity() {
             val intent = Intent(this@MainActivity, Login::class.java)
             startActivity(intent)
         }
-
-
+        onClickRequestPermission(view)
         val button1: Button = findViewById(R.id.button5)
         button1.setOnClickListener {
             val intent = Intent(this@MainActivity, Register::class.java)
@@ -68,7 +67,7 @@ class MainActivity : AppCompatActivity() {
 
             ActivityCompat.shouldShowRequestPermissionRationale(
                 this,
-                android.Manifest.permission.CAMERA
+                Manifest.permission.CAMERA
             ) -> {
                 layout.showSnackbar(
                     view,
@@ -77,14 +76,14 @@ class MainActivity : AppCompatActivity() {
                     getString(R.string.ok)
                 ) {
                     requestPermissionLauncher.launch(
-                        android.Manifest.permission.CAMERA
+                        Manifest.permission.CAMERA
                     )
                 }
             }
 
             else -> {
                 requestPermissionLauncher.launch(
-                    android.Manifest.permission.CAMERA
+                    Manifest.permission.CAMERA
                 )
             }
         }
