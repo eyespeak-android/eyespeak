@@ -34,5 +34,10 @@ fun NavGraph (modifier: Modifier= Modifier, navController: NavHostController) {
         {
             RegisterScreen(navController)
         }
+
+        composable(Screens.Profile.route)
+        {
+            ProfileScreen(navController)
+        }
     }
 }
