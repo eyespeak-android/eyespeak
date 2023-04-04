@@ -1,110 +1,82 @@
-//Je' Mara, John, Isaiah, Tyler
-
 package com.example.eyespeak
 
-import android.content.Intent
+import android.Manifest
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.util.Log
-import android.view.View
-import android.widget.Button
+import androidx.activity.ComponentActivity
+import androidx.activity.compose.setContent
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.appcompat.app.AppCompatActivity
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import com.example.eyespeak.databinding.ActivityMainBinding
-import com.google.android.material.snackbar.Snackbar
-import android.Manifest
+import androidx.navigation.compose.rememberNavController
+import com.example.navigationmenu.ui.theme.EyespeakTheme
 
-class MainActivity : AppCompatActivity() {
-    private lateinit var layout: View
-    private lateinit var binding: ActivityMainBinding
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        binding = ActivityMainBinding.inflate(layoutInflater)
-        val view = binding.root
-        //layout = binding.mainLayout
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
-        val button: Button = findViewById(R.id.button6)
-        button.setOnClickListener {
-            val intent = Intent(this@MainActivity, Login::class.java)
-            startActivity(intent)
-        }
-        onClickRequestPermission(view)
-        val button1: Button = findViewById(R.id.button5)
-        button1.setOnClickListener {
-            val intent = Intent(this@MainActivity, Register::class.java)
-            startActivity(intent)
-        }
-    }
-
-    private val requestPermissionLauncher =
-        registerForActivityResult(
-            ActivityResultContracts.RequestPermission()
-        )
-        { isGranted: Boolean ->
-            if (isGranted) {
-                Log.i("Permission: ", "Granted")
-            } else {
-                Log.i("Permission: ", "Denied")
+class MainActivity : ComponentActivity() {
+    private val requestPermissionLauncher = registerForActivityResult(
+        ActivityResultContracts.RequestPermission()
+    )
+    { isGranted -> {
+            if(isGranted) {
+                println("Permission granted")
+            }
+        else {
+            println("Permission denied")
             }
         }
-
-    fun onClickRequestPermission(view: View) {
+    }
+    private fun requestCameraPermission() {
         when {
             ContextCompat.checkSelfPermission(
                 this,
-                android.Manifest.permission.CAMERA
+                Manifest.permission.CAMERA
             ) == PackageManager.PERMISSION_GRANTED -> {
-                layout.showSnackbar(
-                    view,
-                    getString(R.string.permission_granted),
-                    Snackbar.LENGTH_INDEFINITE,
-                    null
-                ) {}
+                Log.i("kilo", "Permission previously granted")
             }
 
             ActivityCompat.shouldShowRequestPermissionRationale(
                 this,
                 Manifest.permission.CAMERA
-            ) -> {
-                layout.showSnackbar(
-                    view,
-                    getString(R.string.permission_required),
-                    Snackbar.LENGTH_INDEFINITE,
-                    getString(R.string.ok)
-                ) {
-                    requestPermissionLauncher.launch(
-                        Manifest.permission.CAMERA
-                    )
-                }
-            }
+            ) -> Log.i("kilo", "Show camera permissions dialog")
 
-            else -> {
-                requestPermissionLauncher.launch(
-                    Manifest.permission.CAMERA
-                )
-            }
+            else -> requestPermissionLauncher.launch(Manifest.permission.CAMERA)
         }
     }
-    fun View.showSnackbar(
-        view: View,
-        msg: String,
-        length: Int,
-        actionMessage: CharSequence?,
-        action: (View) -> Unit
-    ) {
-        val snackbar = Snackbar.make(view, msg, length)
-        if (actionMessage != null) {
-            snackbar.setAction(actionMessage) {
-                action(this)
-            }.show()
-        } else {
-            snackbar.show()
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContent {
+            EyespeakTheme {
+                // A surface container using the 'background' color from the theme
+                Surface(
+                    modifier = Modifier.fillMaxSize(),
+                    color = MaterialTheme.colorScheme.background
+                ) {
+                    val navController= rememberNavController()
+                    NavGraph(navController=navController)
+                }
+            }
         }
+        requestCameraPermission()
     }
 }
 
+@Composable
+fun Greeting(name: String) {
+    Text(text = "Hello $name!")
+}
 
-
+@Preview(showBackground = true)
+@Composable
+fun DefaultPreview() {
+    EyespeakTheme {
+        Greeting("Android")
+    }
+}
