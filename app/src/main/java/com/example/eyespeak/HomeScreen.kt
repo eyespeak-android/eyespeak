@@ -58,8 +58,9 @@ fun TopAppBar(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(navController: NavController) {
-        val sections = mutableListOf("Settings","Languages","Log out")
+        val sections = mutableListOf("Profile","Settings","Languages","Log out")
         val drawerRoutes = mutableListOf(
+            DrawerRoute("Profile",Screens.Profile.route),
             DrawerRoute("Settings",Screens.Landing.route),
             DrawerRoute("Languages",Screens.Landing.route),
             DrawerRoute("Log out",Screens.Login.route))

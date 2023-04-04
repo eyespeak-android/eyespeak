@@ -1,5 +1,7 @@
 package com.example.eyespeak
 
+import android.graphics.drawable.Drawable
+import android.media.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
@@ -21,5 +23,15 @@ import com.example.navigationmenu.ui.theme.md_theme_light_background
 
 @Composable
 fun ProfileScreen (navController: NavController) {
+
+//    fun Drawable(artist: Artist) {
+//        Row(
+//            verticalAlignment = Alignment.CenterVertically,
+//            horizontalArrangement = Arrangement.End
+//        ) {
+//            Image(/*...*/)
+//            Column { /*...*/ }
+//        }
+//    }
 
 }
