@@ -94,10 +94,10 @@ fun Greeting(name: String) {
     Text(text = "Hello $name!")
 }
 
-@Preview(showBackground = true)
-@Composable
-fun DefaultPreview() {
-    EyespeakTheme {
-        Greeting("Android")
-    }
-}
+//@Preview(showBackground = true)
+//@Composable
+//fun DefaultPreview() {
+//    EyespeakTheme {
+//        Greeting("Android")
+//    }
+//}
