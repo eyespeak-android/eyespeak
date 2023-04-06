@@ -11,7 +11,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.NavHost
 
 @Composable
-fun NavGraph (modifier: Modifier= Modifier, navController: NavHostController) {
+fun NavGraph (context:MainActivity,modifier: Modifier= Modifier, navController: NavHostController) {
     NavHost(
         modifier = modifier,
         navController=navController,
@@ -28,7 +28,7 @@ fun NavGraph (modifier: Modifier= Modifier, navController: NavHostController) {
         }
         composable(Screens.Home.route)
         {
-            HomeScreen(navController)
+            HomeScreen(navController,context)
         }
         composable(Screens.Register.route)
         {

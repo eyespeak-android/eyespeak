@@ -12,7 +12,6 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -22,9 +21,7 @@ import androidx.navigation.NavController
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons.Sharp
 import androidx.compose.material3.*
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.*
 import com.example.navigationmenu.ui.theme.md_theme_dark_errorContainer
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
@@ -57,7 +54,7 @@ fun TopAppBar(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HomeScreen(navController: NavController) {
+fun HomeScreen(navController: NavController,context:MainActivity) {
         val sections = mutableListOf("Profile","Settings","Languages","Log out")
         val drawerRoutes = mutableListOf(
             DrawerRoute("Profile",Screens.Profile.route),
@@ -66,6 +63,7 @@ fun HomeScreen(navController: NavController) {
             DrawerRoute("Log out",Screens.Login.route))
         val selectedItem = remember{mutableStateOf(drawerRoutes[0])}
         val drawerState = rememberDrawerState(initialValue=DrawerValue.Closed)
+        var textResponse by remember{mutableStateOf("This is where the text will appear.")}
         val scope = rememberCoroutineScope()
         ModalNavigationDrawer(
             drawerState= drawerState,
@@ -107,7 +105,7 @@ fun HomeScreen(navController: NavController) {
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     TopAppBar("App bar",drawerState,scope)
-                    SimpleCameraPreview()
+                    SimpleCameraPreview(context=context,textResponse=textResponse,responseChange={newResponse->textResponse=newResponse})
                     Row(
                         modifier = Modifier
                             .fillMaxWidth()
@@ -115,8 +113,12 @@ fun HomeScreen(navController: NavController) {
                         horizontalArrangement = Arrangement.Center
                     ) {
                         Text(
-                            text = "TextField",
-                            fontWeight = FontWeight.Bold
+                            text = textResponse,
+                            fontWeight = FontWeight.Bold,
+                            style = MaterialTheme.typography.bodySmall.copy(
+                                fontWeight = FontWeight.Bold,
+                                color = Color.Black
+                            )
                         )
                     }
                 }

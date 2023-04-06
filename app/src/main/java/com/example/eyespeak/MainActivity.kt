@@ -1,11 +1,17 @@
 package com.example.eyespeak
 
 import android.Manifest
+import android.app.Activity
+import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.Bitmap
 import android.os.Bundle
+import android.provider.MediaStore
 import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.result.ActivityResult
+import androidx.activity.result.ActivityResultCallback
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
@@ -49,9 +55,24 @@ class MainActivity : ComponentActivity() {
             else -> requestPermissionLauncher.launch(Manifest.permission.CAMERA)
         }
     }
+    fun startCamera()
+    {
+        val pictureIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        var resultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {result ->
+        if(result.resultCode== Activity.RESULT_OK)
+        {
+            val data: Intent? = result.data
+            if(data!=null&&data.getExtras()!=null)
+            {
+                println("Image data: $data")
+            }
+        }
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         setContent {
             EyespeakTheme {
                 // A surface container using the 'background' color from the theme
@@ -60,7 +81,7 @@ class MainActivity : ComponentActivity() {
                     color = MaterialTheme.colorScheme.background
                 ) {
                     val navController= rememberNavController()
-                    NavGraph(navController=navController)
+                    NavGraph(navController=navController,context=this)
                 }
             }
         }

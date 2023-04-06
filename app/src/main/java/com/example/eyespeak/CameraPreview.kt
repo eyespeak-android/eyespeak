@@ -1,7 +1,12 @@
 package com.example.eyespeak
 
+import android.app.Activity
 import android.content.Intent
+import android.content.pm.PackageManager
+import android.graphics.Bitmap
 import android.provider.MediaStore
+import androidx.activity.result.ActivityResultRegistry
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.camera.core.CameraSelector
 import androidx.camera.core.ImageCapture
 import androidx.camera.core.Preview
@@ -10,19 +15,21 @@ import androidx.camera.view.PreviewView
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.content.ContextCompat
+import com.google.mlkit.vision.common.InputImage
+import com.google.mlkit.vision.text.TextRecognition
+import com.google.mlkit.vision.text.latin.TextRecognizerOptions
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
 
 @Composable
-fun SimpleCameraPreview() {
+fun SimpleCameraPreview(context:MainActivity,textResponse: String,responseChange:(String) ->Unit) {
     val lifecycleOwner = LocalLifecycleOwner.current
     val context = LocalContext.current
     val cameraProviderFuture = remember { ProcessCameraProvider.getInstance(context) }
@@ -68,7 +75,28 @@ fun SimpleCameraPreview() {
     LaunchedEffect(takePicture.value) {
         if (takePicture.value) {
             val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
-            context.startActivity(intent)
+            val result = (context as MainActivity).activityResultRegistry.register("takePicture",
+                ActivityResultContracts.StartActivityForResult())
+            { result ->
+                if(result.resultCode == Activity.RESULT_OK)
+                {
+                    val image = result.data?.extras?.get("data") as Bitmap
+                    val recognizer = TextRecognition.getClient(TextRecognizerOptions.DEFAULT_OPTIONS)
+                    val realImage = InputImage.fromBitmap(image,0)
+                    val textResult = recognizer.process(realImage)
+                        .addOnSuccessListener{visionText ->
+                            println("Detected text:"+visionText.text)
+                            responseChange(visionText.text)
+                        }.addOnFailureListener{e->
+                            println("Detected text has some kind of error.")
+                        }
+                    println("Bitmap: $image")
+                }
+            }
+            intent.resolveActivity(context.packageManager)?.also{
+                result.launch(intent)
+            }
+            //context.startActivity(intent)
             takePicture.value = false
         }
     }
