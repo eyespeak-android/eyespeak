@@ -96,5 +96,5 @@ https://user-images.githubusercontent.com/104329626/229892092-615a6c07-4e6e-4ff0
 
 ### Text Recognition in action
 
-<a href="//imgur.com/a/f8zu1AN",'_blank'>Android Eyespeak Text Recognition</a>
+<a href="//imgur.com/a/f8zu1AN">Android Eyespeak Text Recognition</a>
 
