@@ -67,7 +67,7 @@ fun LandingScreen(navController: NavController) {
                         fontWeight = FontWeight.Bold,
                         color = Color.White
                     ),
-                    text="REGISTER"
+                    text="SIGN UP"
                 )
             }
         }

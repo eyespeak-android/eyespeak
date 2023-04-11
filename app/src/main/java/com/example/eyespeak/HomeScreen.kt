@@ -117,9 +117,9 @@ fun HomeScreen(navController: NavController,context:MainActivity) {
                     ) {
                         Text(
                             text = textResponse,
-                            fontWeight = FontWeight.Bold,
+                            fontWeight = FontWeight.ExtraBold,
                             style = MaterialTheme.typography.bodySmall.copy(
-                                fontWeight = FontWeight.Bold,
+                                fontWeight = FontWeight.ExtraBold,
                                 color = Color.Black
                             )
                         )

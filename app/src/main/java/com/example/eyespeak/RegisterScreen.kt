@@ -75,7 +75,7 @@ fun RegisterScreen(navController: NavController) {
                     color=Color.Black,
 
                 ),
-                text="By signing up, you agree to Eyespeak's Terms of Service and Privacy Policy.")
+                text="By clicking on the signing up button, You agree to Eyespeak's Terms of Service & Privacy Policy.")
             Checkbox(
                 checked=privacySeen,
                 onCheckedChange={privacySeen=it}
