@@ -84,7 +84,7 @@ fun RegisterScreen(navController: NavController) {
         Button(
             shape = RoundedCornerShape(18),
             modifier = Modifier.padding(16.dp).height(60.dp).width(320.dp).border(width=2.dp,color= Color.Black,shape= RoundedCornerShape(18)),
-            onClick={navController.navigate(Screens.Home.route)},
+            onClick={navController.navigate(Screens.Introduction.route)},
             colors = ButtonDefaults.buttonColors(Color.Black)
         ) {
             Text(

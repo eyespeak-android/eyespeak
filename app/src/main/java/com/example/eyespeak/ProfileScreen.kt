@@ -77,9 +77,16 @@ fun ProfileScreen(navController: NavController) {
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             Text(text = "Cancel",
-                modifier = Modifier.clickable { notification.value = "Cancelled" })
+                modifier = Modifier.clickable
+                {
+                    notification.value = "Cancelled";
+
+                })
             Text(text = "Save",
-                modifier = Modifier.clickable { notification.value = "Profile updated" })
+                modifier = Modifier.clickable
+                {
+                    notification.value = "Profile updated"
+                })
         }
 
         ProfileImage()

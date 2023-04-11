@@ -34,7 +34,10 @@ fun NavGraph (context:MainActivity,modifier: Modifier= Modifier, navController: 
         {
             RegisterScreen(navController)
         }
-
+        composable(Screens.Introduction.route)
+        {
+            IntroductionScreen(navController)
+        }
         composable(Screens.Profile.route)
         {
             ProfileScreen(navController)
