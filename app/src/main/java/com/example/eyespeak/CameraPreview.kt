@@ -1,10 +1,12 @@
 package com.example.eyespeak
 
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.provider.MediaStore
+import android.speech.tts.TextToSpeech
 import androidx.activity.result.ActivityResultRegistry
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.camera.core.CameraSelector
@@ -27,19 +29,21 @@ import com.google.mlkit.vision.text.TextRecognition
 import com.google.mlkit.vision.text.latin.TextRecognizerOptions
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
+import androidx.lifecycle.viewmodel.compose.viewModel
+import java.util.*
+
+
 
 @Composable
-fun SimpleCameraPreview(context:MainActivity,textResponse: String,responseChange:(String) ->Unit) {
+fun SimpleCameraPreview(context:MainActivity,textResponse: String,responseChange:(String) ->Unit, viewModel:CameraViewModel = viewModel()) {
     val lifecycleOwner = LocalLifecycleOwner.current
     val context = LocalContext.current
     val cameraProviderFuture = remember { ProcessCameraProvider.getInstance(context) }
-
     val takePicture = remember { mutableStateOf(false) }
-
+    val state = viewModel.state.value
     val executor = ContextCompat.getMainExecutor(context)
     val cameraProvider = remember { mutableStateOf<ProcessCameraProvider?>(null) }
     val imageCapture = remember { mutableStateOf<ImageCapture?>(null) }
-
     AndroidView(
         factory = { ctx ->
             val previewView = PreviewView(ctx)
@@ -86,6 +90,7 @@ fun SimpleCameraPreview(context:MainActivity,textResponse: String,responseChange
                     val textResult = recognizer.process(realImage)
                         .addOnSuccessListener{visionText ->
                             println("Detected text:"+visionText.text)
+                            viewModel.textToSpeech(context,visionText.text)
                             responseChange(visionText.text)
                         }.addOnFailureListener{e->
                             println("Detected text has some kind of error.")
