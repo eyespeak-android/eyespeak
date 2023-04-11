@@ -64,7 +64,6 @@ class TextRecognitionActivity{
         }
         // [END mlkit_process_text_block]
     }
-
     private fun getTextRecognizer(): TextRecognizer {
         // [START mlkit_local_doc_recognizer]
         return TextRecognition.getClient(TextRecognizerOptions.DEFAULT_OPTIONS)
