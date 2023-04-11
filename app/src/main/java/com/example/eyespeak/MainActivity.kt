@@ -3,7 +3,6 @@ package com.example.eyespeak
 import android.Manifest
 import android.app.Activity
 import android.content.Intent
-import android.speech.tts.TextToSpeech
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.os.Bundle
@@ -25,10 +24,8 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.navigation.compose.rememberNavController
 import com.example.navigationmenu.ui.theme.EyespeakTheme
-import java.util.*
 
 class MainActivity : ComponentActivity() {
-    private lateinit var tts: TextToSpeech
     private val requestPermissionLauncher = registerForActivityResult(
         ActivityResultContracts.RequestPermission()
     )
@@ -73,9 +70,9 @@ class MainActivity : ComponentActivity() {
         }
     }
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         setContent {
             EyespeakTheme {
                 // A surface container using the 'background' color from the theme
@@ -90,7 +87,6 @@ class MainActivity : ComponentActivity() {
         }
         requestCameraPermission()
     }
-
 }
 
 @Composable
