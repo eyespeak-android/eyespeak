@@ -19,9 +19,10 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import androidx.compose.material.*
 import androidx.compose.material.icons.Icons.Sharp
 import androidx.compose.material3.*
+import androidx.compose.material3.DrawerState
+import androidx.compose.material3.DrawerValue
 import androidx.compose.runtime.*
 import com.example.navigationmenu.ui.theme.md_theme_dark_errorContainer
 import kotlinx.coroutines.CoroutineScope
@@ -60,12 +61,12 @@ fun HomeScreen(navController: NavController,context:MainActivity) {
         val sections = mutableListOf("Profile","Settings","Languages","Log out","Guide")
         val drawerRoutes = mutableListOf(
             DrawerRoute("Profile",Screens.Profile.route),
-            DrawerRoute("Settings",Screens.Landing.route),
+            DrawerRoute("Settings",Screens.Settings.route),
             DrawerRoute("Languages",Screens.Landing.route),
             DrawerRoute("Log out",Screens.Landing.route),
             DrawerRoute("Guide",Screens.Introduction.route))
         val selectedItem = remember{mutableStateOf(drawerRoutes[0])}
-        val drawerState = rememberDrawerState(initialValue=DrawerValue.Closed)
+        val drawerState = rememberDrawerState(initialValue= DrawerValue.Closed)
         var textResponse by remember{mutableStateOf("This is where the text will appear.")}
         val scope = rememberCoroutineScope()
         ModalNavigationDrawer(

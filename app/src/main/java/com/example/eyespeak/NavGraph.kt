@@ -1,5 +1,7 @@
 package com.example.eyespeak
 
+import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.internal.composableLambda
 import androidx.compose.ui.Modifier
@@ -10,6 +12,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.NavHost
 
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterialApi::class)
 @Composable
 fun NavGraph (context:MainActivity,modifier: Modifier= Modifier, navController: NavHostController) {
     NavHost(
@@ -41,6 +44,10 @@ fun NavGraph (context:MainActivity,modifier: Modifier= Modifier, navController: 
         composable(Screens.Profile.route)
         {
             ProfileScreen(navController)
+        }
+        composable(Screens.Settings.route)
+        {
+            SettingsScreen(navController)
         }
     }
 }
