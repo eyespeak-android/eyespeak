@@ -98,3 +98,6 @@ https://user-images.githubusercontent.com/104329626/229892092-615a6c07-4e6e-4ff0
 
 <a href="//imgur.com/a/f8zu1AN">Android Eyespeak Text Recognition</a>
 
+# Milestone 5
+
+<img src="https://github.com/eyespeak-android/eyespeak/blob/main/guidesettingsvid2.gif" width=600>
