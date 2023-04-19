@@ -2,14 +2,22 @@ package com.example.eyespeak
 
 
 
+import android.content.Intent
+import android.util.Log
+import android.widget.Toast
+import androidx.compose.animation.animateContentSize
+import androidx.compose.animation.core.LinearOutSlowInEasing
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
 import com.example.eyespeak.R
 import androidx.compose.foundation.background
+//import androidx.compose.foundation.gestures.ModifierLocalScrollableContainerProvider.value
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.material3.Card
 import androidx.compose.material3.Shapes
-import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -21,9 +29,14 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.navigationmenu.ui.theme.EyespeakTheme
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.runtime.*
+import androidx.compose.ui.draw.rotate
+import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavController
+
 
 
 @ExperimentalMaterial3Api
@@ -32,9 +45,10 @@ import androidx.navigation.NavController
 fun SettingsScreen(navController: NavController){
     Column() {
         HeaderText()
-        ProfileCardUI()
+        ProfileCardUI(navController)
         GeneralOptionsUI()
         SupportOptionsUI()
+        //Slider()
     }
 }
 
@@ -53,7 +67,7 @@ fun HeaderText() {
 }
 
 @Composable
-fun ProfileCardUI() {
+fun ProfileCardUI(navController: NavController) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -82,7 +96,8 @@ fun ProfileCardUI() {
 
                 Button(
                     modifier = Modifier.padding(top = 10.dp),
-                    onClick = {},
+                    onClick = {navController.navigate(Screens.Profile.route)
+                              },
                     colors = ButtonDefaults.buttonColors(
                     ),
                     contentPadding = PaddingValues(horizontal = 30.dp),
@@ -293,3 +308,28 @@ fun SupportItem(icon: Int, mainText: String, onClick: () -> Unit) {
         }
     }
 }
+
+
+
+//@Composable
+//private fun MyUI() {
+//
+//    var sliderValue by remember {
+//        mutableStateOf(0f)
+//    }
+//
+//    Slider(
+//        modifier = Modifier
+//            .width(width = 130.dp)
+//            .rotate(degrees = -90f),
+//        value = sliderValue,
+//        onValueChange = { sliderValue_ ->
+//            sliderValue = sliderValue_
+//        },
+//        onValueChangeFinished = {
+//            // this is called when the user completed selecting the value
+//            Log.d("SettingsScreen", "sliderValue = $sliderValue")
+//        },
+//        valueRange = 0f..5f
+//    )
+//}

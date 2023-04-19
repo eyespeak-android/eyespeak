@@ -13,4 +13,6 @@ sealed class Screens(val route:String)
     object Settings: Screens("settings_screen")
 
     object Introduction: Screens("introduction_screen")
+
+    object Text: Screens("text_screen")
 }

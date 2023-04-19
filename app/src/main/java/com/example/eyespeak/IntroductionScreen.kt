@@ -25,8 +25,8 @@ import kotlinx.coroutines.launch
 @Composable
 fun IntroductionScreen(navController: NavController)
 {
-    val guideSections = mutableListOf("Vision to Voice, Redfined","Voice Activations","Language Translations","Get Started!")
-    val guideContent = mutableListOf(
+    val guideSections = mutableListOf("Please swipe between pages","Vision to Voice, Redfined","Voice Activations","Language Translations","Get Started!")
+    val guideContent = mutableListOf("",
         "Eyespeak gives people with low-vision a complete package for viewing the words of the world around them.",
         "No need to worry on visuals - Eyespeak allows you to activate text-reading with simple Google Assistant voice commands.",
         "In an unfamiliar country? Eyespeak can translate words around you - giving you a better understanding of the environment.",
