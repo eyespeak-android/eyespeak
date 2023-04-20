@@ -45,6 +45,10 @@ fun NavGraph (context:MainActivity,modifier: Modifier= Modifier, navController: 
         {
             SettingsScreen(navController)
         }
+        composable(Screens.Languages.route)
+        {
+            LanguageScreen(navController)
+        }
 
         composable(Screens.Customization.route)
         {TextScreen(navController)

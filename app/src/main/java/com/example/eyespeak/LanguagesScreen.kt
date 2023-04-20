@@ -32,18 +32,19 @@ import kotlinx.coroutines.launch
 import java.util.*
 import androidx.compose.material.MaterialTheme
 import androidx.compose.ui.Alignment.Companion.CenterVertically
+import androidx.navigation.NavController
 
-    private val language = listOf("English", "Italian")
+private val language = listOf("English", "Italian")
 
 
     @OptIn(ExperimentalMaterial3Api::class)
     @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
     @Composable
-    fun MultiLanguage(
-        viewModel: LanguageViewModel = viewModel(
+    fun LanguageScreen(navContoller: NavController
+    ) {
+        val viewModel :LanguageViewModel = viewModel(
             factory = DataStoreViewModelFactory(DataStorePreferenceRepository(LocalContext.current))
         )
-    ) {
         val scope = rememberCoroutineScope()
         val currentLanguage = viewModel.language.observeAsState().value
         val menuExpanded = remember { mutableStateOf(false) }
