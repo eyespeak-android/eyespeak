@@ -101,3 +101,7 @@ https://user-images.githubusercontent.com/104329626/229892092-615a6c07-4e6e-4ff0
 # Milestone 5
 
 <img src="https://github.com/eyespeak-android/eyespeak/blob/main/guidesettingsvid2.gif" width=600>
+
+
+https://user-images.githubusercontent.com/104329626/233448526-5c8a03ac-82e2-4976-a059-0d5bbd794ebb.mp4
+
