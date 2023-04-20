@@ -33,7 +33,7 @@ fun LoginScreen(navController: NavController) {
     ) {
         Text(
             style = MaterialTheme.typography.headlineLarge.copy(
-                color = Color.Black
+                color = Color.Black,
             ),
             text = "Log in to your account"
         )

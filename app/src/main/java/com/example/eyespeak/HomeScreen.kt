@@ -62,10 +62,9 @@ fun HomeScreen(navController: NavController,context:MainActivity) {
         val drawerRoutes = mutableListOf(
             DrawerRoute("Profile",Screens.Profile.route),
             DrawerRoute("Settings",Screens.Settings.route),
-            DrawerRoute("Languages",Screens.Landing.route),
-            DrawerRoute("Log out",Screens.Landing.route),
             DrawerRoute("Guide",Screens.Introduction.route),
-            DrawerRoute("Text Size",Screens.Text.route))
+            DrawerRoute("Log out",Screens.Landing.route),
+            )
         val selectedItem = remember{mutableStateOf(drawerRoutes[0])}
         val drawerState = rememberDrawerState(initialValue= DrawerValue.Closed)
         var textResponse by remember{mutableStateOf("This is where the text will appear.")}

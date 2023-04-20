@@ -8,21 +8,31 @@ import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Button
+import androidx.compose.material3.Button
 import androidx.compose.material.OutlinedButton
-import androidx.compose.material.Text
+import androidx.compose.material.Slider
+import androidx.compose.material.Surface
+import androidx.compose.material3.Divider
+import androidx.compose.material3.Text
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.em
 import androidx.navigation.NavController
 
 
 @Composable
 fun TextScreen(navController: NavController) {
 
+    var defaultFontSize = 8
     val context = LocalContext.current
+    var sliderPosition by remember{mutableStateOf(0f)}
+    var fontDisplay = defaultFontSize+(defaultFontSize*sliderPosition).toInt()
     var progressCount: Int by remember { mutableStateOf(0) }
     var progress by remember { mutableStateOf(0f) }
 
@@ -53,74 +63,42 @@ fun TextScreen(navController: NavController) {
         )
     )
 
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(top = 100.dp, start = 30.dp, end = 30.dp)
-    ) {
-        // for the text above the progressBar
-        Row(
+    Surface(modifier=Modifier.background(Color.White))
+    {
+        Column(
             modifier = Modifier
-                .widthIn(min = 30.dp)
-                .fillMaxWidth(size),
-            horizontalArrangement = Arrangement.End
+                .fillMaxSize()
         ) {
-            Text(text = "$progress")
-        }
-        // Progress Bar
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(17.dp)
-        ) {
-            // for the background of the ProgressBar
-            Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .clip(RoundedCornerShape(9.dp))
-                    //.background(Purple200)
+            Text(
+                text="Font Sizing",
+                style=MaterialTheme.typography.titleLarge.copy(
+                    color = Color.Black
+                )
             )
-            // for the progress of the ProgressBar
-            Box(
+            Row(modifier = Modifier.widthIn(min = 300.dp).fillMaxWidth(size).padding(10.dp))
+            {
+                Text(
+                    text = "Use the scroller below. Changes will reflect in this text.",
+                    style = TextStyle(
+                        fontSize = (defaultFontSize + (defaultFontSize * sliderPosition)).toInt().em,
+                        color = Color.Black
+                    )
+                )
+            }
+            Divider(startIndent=8.dp)
+            // for the text above the progressBar
+            Row(
                 modifier = Modifier
+                    .widthIn(min = 300.dp)
                     .fillMaxWidth(size)
-                    .fillMaxHeight()
-                    .clip(RoundedCornerShape(9.dp))
-                    //.background(Purple700)
-                    .animateContentSize()
-            )
-        }
-
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(top = 30.dp),
-            horizontalArrangement = Arrangement.SpaceBetween
-        ) {
-            // decrease button
-            OutlinedButton(onClick = {
-                if (progressCount > 0) {
-                    progressCount -= 2
-                } else {
-                    Toast.makeText(context, "You cannot decrease any more", Toast.LENGTH_SHORT)
-                        .show()
-                }
-            }) {
-                Text(text = "Decrease")
+                    .padding(5.dp),
+                horizontalArrangement = Arrangement.End
+            ) {
+                Slider(value = sliderPosition, onValueChange = { sliderPosition = it })
             }
-            // increase Button
-            Button(onClick = {
-                if (progressCount < 10) {
-                    progressCount += 2
-                } else {
-                    Toast.makeText(context, "You cannot increase more", Toast.LENGTH_SHORT).show()
-                }
-            }) {
-                Text(text = "Increase")
-            }
+
+
         }
-
-
     }
 
 //    Use this when you want your progress bar should animate when you open your app

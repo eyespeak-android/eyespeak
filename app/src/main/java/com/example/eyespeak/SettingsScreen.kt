@@ -46,7 +46,7 @@ fun SettingsScreen(navController: NavController){
     Column() {
         HeaderText()
         ProfileCardUI(navController)
-        GeneralOptionsUI()
+        GeneralOptionsUI(navController)
         SupportOptionsUI()
         //Slider()
     }
@@ -126,7 +126,7 @@ fun ProfileCardUI(navController: NavController) {
 
 @ExperimentalMaterialApi
 @Composable
-fun GeneralOptionsUI() {
+fun GeneralOptionsUI(navController:NavController) {
     Column(
         modifier = Modifier
             .padding(horizontal = 14.dp)
@@ -151,7 +151,7 @@ fun GeneralOptionsUI() {
             icon = R.drawable.ic_more,
             mainText = "More customization",
             subText = "Customize it more to fit your usage",
-            onClick = {}
+            onClick = {navController.navigate(Screens.Customization.route)}
         )
 //        GeneralSettingItem()
     }
