@@ -1,12 +1,8 @@
 package com.example.eyespeak
 
 
-import android.speech.tts.TextToSpeech
 import androidx.compose.material.icons.filled.Menu
-import androidx.camera.core.ImageCapture
-import androidx.camera.core.Preview
 import androidx.compose.foundation.clickable
-import androidx.compose.material3.NavigationDrawerItemColors
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -19,12 +15,10 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import androidx.compose.material.icons.Icons.Sharp
 import androidx.compose.material3.*
 import androidx.compose.material3.DrawerState
 import androidx.compose.material3.DrawerValue
 import androidx.compose.runtime.*
-import com.example.navigationmenu.ui.theme.md_theme_dark_errorContainer
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import java.util.*
@@ -35,7 +29,7 @@ private var cameraProvider : ProcessCameraProvider? = null
 @Composable
 fun TopAppBar(
     title: String,
-    drawerState : DrawerState,
+    drawerState: DrawerState,
     scope: CoroutineScope
 )
 {
@@ -63,6 +57,7 @@ fun HomeScreen(navController: NavController,context:MainActivity) {
             DrawerRoute("Profile",Screens.Profile.route),
             DrawerRoute("Settings",Screens.Settings.route),
             DrawerRoute("Guide",Screens.Introduction.route),
+            DrawerRoute("Languages",Screens.Languages.route),
             DrawerRoute("Log out",Screens.Landing.route),
             )
         val selectedItem = remember{mutableStateOf(drawerRoutes[0])}

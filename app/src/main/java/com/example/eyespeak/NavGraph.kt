@@ -3,11 +3,7 @@ package com.example.eyespeak
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.internal.composableLambda
 import androidx.compose.ui.Modifier
-import androidx.navigation.NavController
-import androidx.navigation.NavGraphBuilder
-import androidx.navigation.NavHost
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.NavHost
@@ -53,5 +49,9 @@ fun NavGraph (context:MainActivity,modifier: Modifier= Modifier, navController: 
         composable(Screens.Customization.route)
         {TextScreen(navController)
         }
+
+//        composable(Screens.Languages.route)
+//        {LanguagesScreen(navController)
+//        }
     }
 }

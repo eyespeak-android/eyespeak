@@ -153,7 +153,12 @@ fun GeneralOptionsUI(navController:NavController) {
             subText = "This is where you change the text size of the font",
             onClick = {navController.navigate(Screens.Customization.route)}
         )
-//        GeneralSettingItem()
+        GeneralSettingItem(
+            icon = R.drawable.ic_more,
+            mainText = "Languages",
+            subText = "This is where languages",
+            onClick = {navController.navigate(Screens.Languages.route)}
+        )
     }
 }
 
