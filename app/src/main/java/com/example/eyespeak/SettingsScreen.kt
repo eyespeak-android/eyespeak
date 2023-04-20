@@ -149,8 +149,8 @@ fun GeneralOptionsUI(navController:NavController) {
         )
         GeneralSettingItem(
             icon = R.drawable.ic_more,
-            mainText = "More customization",
-            subText = "Customize it more to fit your usage",
+            mainText = "Text Size",
+            subText = "This is where you change the text size of the font",
             onClick = {navController.navigate(Screens.Customization.route)}
         )
 //        GeneralSettingItem()
