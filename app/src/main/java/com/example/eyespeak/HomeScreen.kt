@@ -19,8 +19,12 @@ import androidx.compose.material3.*
 import androidx.compose.material3.DrawerState
 import androidx.compose.material3.DrawerValue
 import androidx.compose.runtime.*
+import androidx.compose.ui.unit.em
+import androidx.compose.ui.unit.sp
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.util.*
 
 private var cameraProvider : ProcessCameraProvider? = null
@@ -63,6 +67,14 @@ fun HomeScreen(navController: NavController,context:MainActivity) {
         val selectedItem = remember{mutableStateOf(drawerRoutes[0])}
         val drawerState = rememberDrawerState(initialValue= DrawerValue.Closed)
         var textResponse by remember{mutableStateOf("This is where the text will appear.")}
+        var currentFontSize by remember{mutableStateOf(8)}
+        LaunchedEffect("default_font_size")
+        {
+            currentFontSize = withContext(Dispatchers.IO)
+            {
+                getIntValueByKey(context.dataStore,"default_font_size")
+            }
+        }
         val scope = rememberCoroutineScope()
         ModalNavigationDrawer(
             drawerState= drawerState,
@@ -113,10 +125,11 @@ fun HomeScreen(navController: NavController,context:MainActivity) {
                     ) {
                         Text(
                             text = textResponse,
-                            fontWeight = FontWeight.ExtraBold,
+                            fontWeight = FontWeight.Bold,
                             style = MaterialTheme.typography.bodySmall.copy(
-                                fontWeight = FontWeight.ExtraBold,
-                                color = Color.Black
+                                color = Color.Black,
+                                fontSize=currentFontSize.em,
+                                lineHeight=25.sp,
                             )
                         )
                     }

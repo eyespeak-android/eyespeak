@@ -8,13 +8,9 @@ import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Button
 import androidx.compose.material.OutlinedButton
 import androidx.compose.material.Slider
 import androidx.compose.material.Surface
-import androidx.compose.material3.Divider
-import androidx.compose.material3.Text
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -24,18 +20,58 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.em
 import androidx.navigation.NavController
+import android.content.Context
+import androidx.compose.foundation.border
+import androidx.compose.material.rememberScaffoldState
+import androidx.compose.material3.*
+import androidx.compose.ui.text.font.FontWeight
+import androidx.datastore.core.DataStore
+import androidx.datastore.preferences.core.Preferences
+import androidx.datastore.preferences.core.edit
+import androidx.datastore.preferences.core.floatPreferencesKey
+import androidx.datastore.preferences.core.intPreferencesKey
+import androidx.datastore.preferences.preferencesDataStore
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 
+val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name="settings")
+
+
+
+
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TextScreen(navController: NavController) {
 
-    var defaultFontSize = 8
     val context = LocalContext.current
+    var defaultFontSize = 8
+    val grabFontSize = intPreferencesKey("default_font_size")
     var sliderPosition by remember{mutableStateOf(0f)}
-    var fontDisplay = defaultFontSize+(defaultFontSize*sliderPosition).toInt()
+    var currentFontSize by remember{mutableStateOf(8)}
+    LaunchedEffect("default_font_size")
+    {
+        currentFontSize = withContext(Dispatchers.IO)
+        {
+            getIntValueByKey(context.dataStore,"default_font_size")
+        }
+    }
+    LaunchedEffect("font_slider_position")
+    {
+        sliderPosition = withContext(Dispatchers.IO)
+        {
+            getFloatValueByKey(context.dataStore,"font_slider_position")
+        }
+    }
+    var scaffoldState = rememberScaffoldState()
+    var fontDisplay by remember{mutableStateOf(defaultFontSize+(defaultFontSize*sliderPosition).toInt())}
     var progressCount: Int by remember { mutableStateOf(0) }
     var progress by remember { mutableStateOf(0f) }
-
+    val scope = rememberCoroutineScope()
     /* to avoid the direct calculation of progress variable which is a Float
      and it can sometimes cause problems like it shows 0.4 to 0.400004 so, here I have use
      progressCount and we will increase and decrease it and then convert it to progress(Float)
@@ -65,39 +101,68 @@ fun TextScreen(navController: NavController) {
 
     Surface(modifier=Modifier.background(Color.White))
     {
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-        ) {
-            Text(
-                text="Font Sizing",
-                style=MaterialTheme.typography.titleLarge.copy(
-                    color = Color.Black
-                )
-            )
-            Row(modifier = Modifier.widthIn(min = 300.dp).fillMaxWidth(size).padding(10.dp))
-            {
+        androidx.compose.material.Scaffold(
+            scaffoldState=scaffoldState,
+            floatingActionButton={
+                androidx.compose.material.ExtendedFloatingActionButton(
+                    text = { androidx.compose.material.Text("Save Changes") },
+                    onClick=
+                    {
+
+                        scope.launch{
+                            fontDisplay = defaultFontSize+(defaultFontSize*sliderPosition).toInt()
+                            setIntValueByKey(context.dataStore, "default_font_size", fontDisplay)
+                            scaffoldState.snackbarHostState.showSnackbar("Font size saved!")
+                        }
+                    },
+                    backgroundColor = Color.Black,
+                    contentColor = Color.White,
+                )}
+        )
+        {
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+            ) {
                 Text(
-                    text = "Use the scroller below. Changes will reflect in this text.",
-                    style = TextStyle(
-                        fontSize = (defaultFontSize + (defaultFontSize * sliderPosition)).toInt().em,
+                    text="Font Sizing",
+                    style=MaterialTheme.typography.titleLarge.copy(
                         color = Color.Black
                     )
                 )
-            }
-            Divider(startIndent=8.dp)
-            // for the text above the progressBar
-            Row(
-                modifier = Modifier
-                    .widthIn(min = 300.dp)
-                    .fillMaxWidth(size)
-                    .padding(5.dp),
-                horizontalArrangement = Arrangement.End
-            ) {
-                Slider(value = sliderPosition, onValueChange = { sliderPosition = it })
-            }
+                Row(modifier = Modifier.widthIn(min = 300.dp).fillMaxWidth(size).padding(10.dp))
+                {
+                    Text(
+                        text = "Use the scroller below. Changes will reflect in this text. \n Current size: ${currentFontSize}",
+                        style = TextStyle(
+                            fontSize = (defaultFontSize + (defaultFontSize * sliderPosition)).toInt().em,
+                            color = Color.Black
+                        )
+                    )
+                }
+                Divider(startIndent=8.dp)
+                // for the text above the progressBar
+                Row(
+                    modifier = Modifier
+                        .widthIn(min = 300.dp)
+                        .fillMaxWidth(size)
+                        .padding(5.dp),
+                    horizontalArrangement = Arrangement.End
+                ) {
+                    Slider(value = sliderPosition,
+                        onValueChange =
+                        {
+                            sliderPosition = it;
+                            scope.launch{
+                                fontDisplay = defaultFontSize+(defaultFontSize*sliderPosition).toInt()
+                                setFloatValueByKey(context.dataStore, "font_slider_position", sliderPosition)
+                            }
+                        }
+                    )
+                }
 
 
+            }
         }
     }
 
@@ -107,3 +172,4 @@ fun TextScreen(navController: NavController) {
 //    }
 
 }
+

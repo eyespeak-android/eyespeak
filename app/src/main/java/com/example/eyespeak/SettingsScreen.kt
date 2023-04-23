@@ -3,6 +3,7 @@ package com.example.eyespeak
 
 
 import android.content.Intent
+import android.content.Context
 import android.util.Log
 import android.widget.Toast
 import androidx.compose.animation.animateContentSize
@@ -36,7 +37,6 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavController
-
 
 
 @ExperimentalMaterial3Api
