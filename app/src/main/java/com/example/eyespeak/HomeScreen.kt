@@ -56,12 +56,11 @@ fun TopAppBar(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(navController: NavController,context:MainActivity) {
-        val sections = mutableListOf("Profile","Settings","Text Size","Languages","Log out","Guide")
+        val sections = mutableListOf("Profile","Settings","Text Size","Log out","Guide")
         val drawerRoutes = mutableListOf(
             DrawerRoute("Profile",Screens.Profile.route),
             DrawerRoute("Settings",Screens.Settings.route),
             DrawerRoute("Guide",Screens.Introduction.route),
-            DrawerRoute("Languages",Screens.Languages.route),
             DrawerRoute("Log out",Screens.Landing.route),
             )
         val selectedItem = remember{mutableStateOf(drawerRoutes[0])}

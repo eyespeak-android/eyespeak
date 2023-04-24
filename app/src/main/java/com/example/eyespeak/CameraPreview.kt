@@ -7,6 +7,7 @@ import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.provider.MediaStore
 import android.speech.tts.TextToSpeech
+import android.widget.Toast
 import androidx.activity.result.ActivityResultRegistry
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.camera.core.CameraSelector
@@ -30,6 +31,12 @@ import com.google.mlkit.vision.text.latin.TextRecognizerOptions
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.google.mlkit.common.model.DownloadConditions
+import com.google.mlkit.nl.translate.TranslateLanguage
+import com.google.mlkit.nl.translate.Translation
+import com.google.mlkit.nl.translate.TranslatorOptions
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import java.util.*
 
 
@@ -38,10 +45,29 @@ import java.util.*
 fun SimpleCameraPreview(context:MainActivity,textResponse: String,responseChange:(String) ->Unit, viewModel:CameraViewModel = viewModel()) {
     val lifecycleOwner = LocalLifecycleOwner.current
     val context = LocalContext.current
+    val allLanguages= getLanguageDictionary()
     val cameraProviderFuture = remember { ProcessCameraProvider.getInstance(context) }
     val takePicture = remember { mutableStateOf(false) }
     val state = viewModel.state.value
     val executor = ContextCompat.getMainExecutor(context)
+    val fromLanguageChoice = remember{mutableStateOf("English")}
+    val toLanguageChoice = remember{mutableStateOf("English")}
+    LaunchedEffect("from_language")
+    {
+        fromLanguageChoice.value = withContext(Dispatchers.IO)
+        {
+            getStringValueByKey(context.dataStore,"from_language").toString()
+        }
+    }
+    LaunchedEffect("to_language")
+    {
+        toLanguageChoice.value = withContext(Dispatchers.IO)
+        {
+            getStringValueByKey(context.dataStore,"to_language").toString()
+        }
+    }
+    println("from_language: $fromLanguageChoice")
+    println("to_language: $toLanguageChoice")
     val cameraProvider = remember { mutableStateOf<ProcessCameraProvider?>(null) }
     val imageCapture = remember { mutableStateOf<ImageCapture?>(null) }
     AndroidView(
@@ -84,14 +110,35 @@ fun SimpleCameraPreview(context:MainActivity,textResponse: String,responseChange
             { result ->
                 if(result.resultCode == Activity.RESULT_OK)
                 {
+                    var translationMessage = ""
                     val image = result.data?.extras?.get("data") as Bitmap
                     val recognizer = TextRecognition.getClient(TextRecognizerOptions.DEFAULT_OPTIONS)
                     val realImage = InputImage.fromBitmap(image,0)
                     val textResult = recognizer.process(realImage)
                         .addOnSuccessListener{visionText ->
                             println("Detected text:"+visionText.text)
-                            viewModel.textToSpeech(context,visionText.text)
-                            responseChange(visionText.text)
+                            val options = TranslatorOptions.Builder()
+                                .setSourceLanguage(fromLanguageChoice.value)
+                                .setTargetLanguage(toLanguageChoice.value)
+                                .build()
+                            val translator = Translation.getClient(options)
+                            var conditions = DownloadConditions.Builder()
+                                .requireWifi()
+                                .build()
+                            translator.downloadModelIfNeeded(conditions)
+                                .addOnSuccessListener{
+                                    Toast.makeText(context,"Model downloaded!",Toast.LENGTH_SHORT)
+                                }
+                                .addOnFailureListener{exception->
+                                    Toast.makeText(context,"Model download failed.",Toast.LENGTH_SHORT)
+                                }
+                            translator.translate(visionText.text)
+                                .addOnSuccessListener{translatedText->
+                                    translationMessage = translatedText
+                                    println("Translated text: $translatedText")
+                                    responseChange(translatedText)
+                                    viewModel.textToSpeech(context,translatedText,toLanguageChoice.value)
+                                }
                         }.addOnFailureListener{e->
                             println("Detected text has some kind of error.")
                         }
