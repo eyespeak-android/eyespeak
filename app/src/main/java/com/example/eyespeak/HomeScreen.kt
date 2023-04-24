@@ -58,7 +58,7 @@ fun TopAppBar(
 fun HomeScreen(navController: NavController,context:MainActivity) {
         val sections = mutableListOf("Profile","Settings","Text Size","Log out","Guide")
         val drawerRoutes = mutableListOf(
-            DrawerRoute("Profile",Screens.Profile.route),
+            DrawerRoute("Home",Screens.Home.route),
             DrawerRoute("Settings",Screens.Settings.route),
             DrawerRoute("Guide",Screens.Introduction.route),
             DrawerRoute("Log out",Screens.Landing.route),

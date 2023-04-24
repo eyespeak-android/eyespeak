@@ -36,6 +36,8 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.rememberScaffoldState
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
@@ -48,9 +50,20 @@ import coil.compose.rememberImagePainter
 //import com.catalin.profilescreen.ui.theme.EyeSpeakTheme
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 
+@Composable
+fun StyledText(text:String,width:Int)
+{
+    Text(text=text,style = MaterialTheme.typography.body2.copy(
+        fontWeight = FontWeight.Bold,
+        color=Color.Black
+    ),
+        modifier = Modifier.width(width.dp))
+}
 
 @Composable
 fun ProfileScreen(navController: NavController) {
@@ -60,92 +73,120 @@ fun ProfileScreen(navController: NavController) {
         Toast.makeText(LocalContext.current, notification.value, Toast.LENGTH_LONG).show()
         notification.value = ""
     }
-
+    val scope = rememberCoroutineScope()
+    val context = LocalContext.current
+    var scaffoldState = rememberScaffoldState()
     var name by rememberSaveable { mutableStateOf("default name") }
     var username by rememberSaveable { mutableStateOf("default username") }
     var bio by rememberSaveable { mutableStateOf("default bio") }
-
-    Column(
-        modifier = Modifier
-            .verticalScroll(rememberScrollState())
-            .padding(8.dp)
-    ) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(8.dp),
-            horizontalArrangement = Arrangement.SpaceBetween
-        ) {
-            Text(text = "Cancel",
-                modifier = Modifier.clickable
-                {
-                    notification.value = "Cancelled";
-
-                })
-            Text(text = "Save",
-                modifier = Modifier.clickable
-                {
-                    notification.value = "Profile updated"
-                })
+    LaunchedEffect("name")
+    {
+        name = withContext(Dispatchers.IO)
+        {
+            getStringValueByKey(context.dataStore,"name")
         }
-
-        ProfileImage()
-
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(start = 4.dp, end = 4.dp),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Text(text = "Name", modifier = Modifier.width(100.dp))
-            TextField(
-                value = name,
-                onValueChange = { name = it },
-                colors = TextFieldDefaults.textFieldColors(
-                    //backgroundColor = Color.Transparent,
-                    textColor = Color.Black
-                )
-            )
+    }
+    LaunchedEffect("username")
+    {
+        username = withContext(Dispatchers.IO)
+        {
+            getStringValueByKey(context.dataStore,"username")
         }
-
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(start = 4.dp, end = 4.dp),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Text(text = "Username", modifier = Modifier.width(100.dp))
-            TextField(
-                value = username,
-                onValueChange = { username = it },
-                colors = TextFieldDefaults.textFieldColors(
-                    //backgroundColor = Color.Transparent,
-                    textColor = Color.Black
-                )
-            )
+    }
+    LaunchedEffect("bio")
+    {
+        bio = withContext(Dispatchers.IO)
+        {
+            getStringValueByKey(context.dataStore,"bio")
         }
+    }
+    Surface(modifier=Modifier.fillMaxSize().background(Color.White))
+    {
+        androidx.compose.material.Scaffold(
+            scaffoldState=scaffoldState,
+            floatingActionButton={
+                androidx.compose.material.ExtendedFloatingActionButton(
+                    text = { androidx.compose.material.Text("Save Changes") },
+                    onClick=
+                    {
+                        scope.launch{
+                            setStringValueByKey(context.dataStore,"name",name)
+                            setStringValueByKey(context.dataStore,"username",username)
+                            setStringValueByKey(context.dataStore,"bio",bio)
+                            scaffoldState.snackbarHostState.showSnackbar("Profile settings saved!")
+                        }
+                    },
+                    backgroundColor = Color.Black,
+                    contentColor = Color.White,
+                )}
+        )
+        {
+            Column(
+                modifier = Modifier
+                    .verticalScroll(rememberScrollState())
+                    .padding(8.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
 
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(8.dp),
-            verticalAlignment = Alignment.Top
-        ) {
-            Text(
-                text = "Bio", modifier = Modifier
-                    .width(100.dp)
-                    .padding(top = 8.dp)
-            )
-            TextField(
-                value = bio,
-                onValueChange = { bio = it },
-                colors = TextFieldDefaults.textFieldColors(
-                    //backgroundColor = Color.Transparent,
-                    textColor = Color.Black
-                ),
-                singleLine = false,
-                modifier = Modifier.height(150.dp)
-            )
+                ProfileImage()
+
+                StyledText(text = "Change profile picture", 100)
+
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(start = 4.dp, end = 4.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    StyledText(text = "Name", 100)
+                    TextField(
+                        value = name,
+                        onValueChange = { name = it },
+                        colors = TextFieldDefaults.textFieldColors(
+                            //backgroundColor = Color.Transparent,
+                            textColor = Color.White
+                        )
+                    )
+                }
+
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(start = 4.dp, end = 4.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    StyledText(text = "Username", width = 100)
+                    TextField(
+                        value = username,
+                        onValueChange = { username = it },
+                        colors = TextFieldDefaults.textFieldColors(
+                            //backgroundColor = Color.Transparent,
+                            textColor = Color.White
+                        )
+                    )
+                }
+
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(8.dp),
+                    verticalAlignment = Alignment.Top
+                ) {
+                    StyledText(
+                        text = "Bio", width = 100
+                    )
+                    TextField(
+                        value = bio,
+                        onValueChange = { bio = it },
+                        colors = TextFieldDefaults.textFieldColors(
+                            //backgroundColor = Color.Transparent,
+                            textColor = Color.White
+                        ),
+                        singleLine = false,
+                        modifier = Modifier.height(150.dp)
+                    )
+                }
+            }
         }
     }
 }
@@ -187,7 +228,6 @@ fun ProfileImage() {
                 contentScale = ContentScale.Crop
             )
         }
-        Text(text = "Change profile picture")
     }
 }
 
