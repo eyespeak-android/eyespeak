@@ -202,7 +202,7 @@ fun GeneralSettingItem(icon: Int, mainText: String, subText: String, onClick: ()
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                Row(verticalAlignment = Alignment.CenterVertically) {
+                Row(verticalAlignment = Alignment.CenterVertically,modifier=Modifier.background(styleChoice.backgroundColor)) {
                     Box(
                         modifier = Modifier
                             .size(34.dp).background(styleChoice.backgroundColor)

@@ -34,6 +34,9 @@ fun styleDictionary(styleChoice:String) : Style
     var styleMap = HashMap<String,Style>()
     styleMap.put("Light",Style(Color.White,Color.Black,Color(0xb8bab9)))
     styleMap.put("Dark",Style(Color.Black,Color.White,Color(0xE1E8E3)))
+    styleMap.put("Protanopia",Style(Color(0xFF1B3533),Color.LightGray,Color(0xE1E8E3)))
+    styleMap.put("Deuteranopia",Style(Color(0xFF1A324B),Color.LightGray,Color(0xE1E8E3)))
+    styleMap.put("Tritanopia",Style(Color(0xFF350003),Color.LightGray,Color(0xE1E8E3)))
     return styleMap.get(styleChoice) ?: Style(Color.White,Color.Black,Color(0xE1E8E3))
 }
 
@@ -49,7 +52,7 @@ fun StyleScreen(navController: NavController
     if (chosenLanguage != null) {
         println(chosenLanguage.javaClass.name)
     }
-    var styleOptions  = mutableListOf("Light","Dark")
+    var styleOptions  = mutableListOf("Light","Dark","Protanopia","Deuteranopia","Tritanopia")
     var expanded by remember{ mutableStateOf(false) }
     var stylePageChoice = remember{mutableStateOf(Style(Color.White,Color.Black,Color(0xE1E8E3)))}
     LaunchedEffect("style_choice")
