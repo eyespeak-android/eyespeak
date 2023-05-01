@@ -56,11 +56,11 @@ import kotlinx.coroutines.withContext
 
 
 @Composable
-fun StyledText(text:String,width:Int)
+fun StyledText(text:String,width:Int,styleChoice:Style)
 {
     Text(text=text,style = MaterialTheme.typography.body2.copy(
         fontWeight = FontWeight.Bold,
-        color=Color.Black
+        color=styleChoice.textColor
     ),
         modifier = Modifier.width(width.dp))
 }
@@ -79,6 +79,14 @@ fun ProfileScreen(navController: NavController) {
     var name by rememberSaveable { mutableStateOf("default name") }
     var username by rememberSaveable { mutableStateOf("default username") }
     var bio by rememberSaveable { mutableStateOf("default bio") }
+    var styleChoice = remember{mutableStateOf(Style(Color.White,Color.Black,Color(0xE1E8E3)))}
+    LaunchedEffect("style_choice")
+    {
+        styleChoice.value = withContext(Dispatchers.IO)
+        {
+            styleDictionary(getStringValueByKey(context.dataStore,"style_choice"))
+        }
+    }
     LaunchedEffect("name")
     {
         name = withContext(Dispatchers.IO)
@@ -116,9 +124,10 @@ fun ProfileScreen(navController: NavController) {
                             scaffoldState.snackbarHostState.showSnackbar("Profile settings saved!")
                         }
                     },
-                    backgroundColor = Color.Black,
-                    contentColor = Color.White,
-                )}
+                    backgroundColor = styleChoice.value.textColor,
+                    contentColor = styleChoice.value.backgroundColor,
+                )},
+            backgroundColor = styleChoice.value.backgroundColor
         )
         {
             Column(
@@ -130,7 +139,7 @@ fun ProfileScreen(navController: NavController) {
 
                 ProfileImage()
 
-                StyledText(text = "Change profile picture", 100)
+                StyledText(text = "Change profile picture", width= 100,styleChoice=styleChoice.value)
 
                 Row(
                     modifier = Modifier
@@ -138,7 +147,7 @@ fun ProfileScreen(navController: NavController) {
                         .padding(start = 4.dp, end = 4.dp),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    StyledText(text = "Name", 100)
+                    StyledText(text = "Name", 100,styleChoice=styleChoice.value)
                     TextField(
                         value = name,
                         onValueChange = { name = it },
@@ -155,7 +164,7 @@ fun ProfileScreen(navController: NavController) {
                         .padding(start = 4.dp, end = 4.dp),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    StyledText(text = "Username", width = 100)
+                    StyledText(text = "Username", width = 100,styleChoice=styleChoice.value)
                     TextField(
                         value = username,
                         onValueChange = { username = it },
@@ -173,7 +182,7 @@ fun ProfileScreen(navController: NavController) {
                     verticalAlignment = Alignment.Top
                 ) {
                     StyledText(
-                        text = "Bio", width = 100
+                        text = "Bio", width = 100,styleChoice=styleChoice.value
                     )
                     TextField(
                         value = bio,

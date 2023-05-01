@@ -13,6 +13,7 @@ import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
 import com.example.eyespeak.R
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 //import androidx.compose.foundation.gestures.ModifierLocalScrollableContainerProvider.value
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
@@ -37,24 +38,35 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavController
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
+
 
 
 @ExperimentalMaterial3Api
 @ExperimentalMaterialApi
 @Composable
 fun SettingsScreen(navController: NavController){
-    Column() {
-        HeaderText()
-        ProfileCardUI(navController)
-        GeneralOptionsUI(navController)
-        SupportOptionsUI()
-        //Slider()
-    }
+        val context = LocalContext.current;
+        var styleChoice = remember{mutableStateOf(Style(Color.White,Color.Black,Color(0xE1E8E3)))}
+        LaunchedEffect("style_choice")
+        {
+            styleChoice.value = withContext(Dispatchers.IO)
+            {
+                styleDictionary(getStringValueByKey(context.dataStore,"style_choice"))
+            }
+        }
+        Column(modifier=Modifier.background(styleChoice.value.backgroundColor).fillMaxSize()) {
+            HeaderText(styleChoice.value)
+            ProfileCardUI(navController,styleChoice.value)
+            GeneralOptionsUI(navController,styleChoice.value)
+            SupportOptionsUI(navController,styleChoice.value)
+        }
 }
 
 
 @Composable
-fun HeaderText() {
+fun HeaderText(styleChoice:Style) {
     Text(
         text = "Settings",
         textAlign = TextAlign.Center,
@@ -62,18 +74,21 @@ fun HeaderText() {
             .fillMaxWidth()
             .padding(top = 30.dp, bottom = 10.dp),
         fontWeight = FontWeight.ExtraBold,
-        fontSize = 16.sp
+        fontSize = 16.sp,
+        style= MaterialTheme.typography.h5.copy(
+            color=styleChoice.textColor
+        )
     )
 }
 
 @Composable
-fun ProfileCardUI(navController: NavController) {
+fun ProfileCardUI(navController: NavController,styleChoice:Style) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
             .height(150.dp)
             .padding(10.dp),
-        backgroundColor = Color.White,
+        backgroundColor = styleChoice.backgroundColor,
         elevation = 0.dp,
     ) {
         Row(
@@ -85,6 +100,7 @@ fun ProfileCardUI(navController: NavController) {
                     text = "Check Your Profile",
                     fontSize = 16.sp,
                     fontWeight = FontWeight.Bold,
+                    color=styleChoice.textColor
                 )
 
                 Text(
@@ -95,10 +111,10 @@ fun ProfileCardUI(navController: NavController) {
                 )
 
                 Button(
-                    modifier = Modifier.padding(top = 10.dp),
+                    modifier = Modifier.padding(top = 10.dp).border(width=2.dp,color=styleChoice.textColor,shape = RoundedCornerShape(18)),
                     onClick = {navController.navigate(Screens.Profile.route)
                               },
-                    colors = ButtonDefaults.buttonColors(
+                    colors = ButtonDefaults.buttonColors(styleChoice.backgroundColor
                     ),
                     contentPadding = PaddingValues(horizontal = 30.dp),
                     elevation = ButtonDefaults.elevation(
@@ -111,6 +127,9 @@ fun ProfileCardUI(navController: NavController) {
                         text = "View",
                         fontSize = 12.sp,
                         fontWeight = FontWeight.Bold,
+                        style=MaterialTheme.typography.body1.copy(
+                            color=styleChoice.textColor
+                        )
 
                     )
                 }
@@ -126,7 +145,7 @@ fun ProfileCardUI(navController: NavController) {
 
 @ExperimentalMaterialApi
 @Composable
-fun GeneralOptionsUI(navController:NavController) {
+fun GeneralOptionsUI(navController:NavController,styleChoice:Style) {
     Column(
         modifier = Modifier
             .padding(horizontal = 14.dp)
@@ -134,100 +153,106 @@ fun GeneralOptionsUI(navController:NavController) {
     ) {
         Text(
             text = "General",
-            //fontFamily = Poppins,
-            //color = SecondaryColor,
             fontSize = 14.sp,
             fontWeight = FontWeight.Bold,
             modifier = Modifier
-                .padding(vertical = 8.dp)
+                .padding(vertical = 8.dp),
+            style = MaterialTheme.typography.h5.copy(
+                color=styleChoice.textColor
+            )
         )
-        GeneralSettingItem(
-            icon = R.drawable.ic_rounded_notification,
-            mainText = "Notifications",
-            subText = "Customize notifications",
-            onClick = {}
-        )
+        Divider(color=Color.Black)
         GeneralSettingItem(
             icon = R.drawable.ic_more,
             mainText = "Text Size",
-            subText = "This is where you change the text size of the font",
-            onClick = {navController.navigate(Screens.Customization.route)}
+            subText = "Set the font size for the output text of the Eyespeak application.",
+            onClick = {navController.navigate(Screens.Customization.route)},
+            styleChoice=styleChoice
         )
         GeneralSettingItem(
             icon = R.drawable.ic_more,
             mainText = "Languages",
-            subText = "This is where languages",
-            onClick = {navController.navigate(Screens.Languages.route)}
+            subText = "Set languages for translating what Eyespeak reads.",
+            onClick = {navController.navigate(Screens.Languages.route)},
+            styleChoice=styleChoice
+        )
+        GeneralSettingItem(
+            icon=R.drawable.ic_more,
+            mainText="Styling",
+            subText = "Set dark, light, and color blind-friendly styles.",
+            onClick={navController.navigate(Screens.Styles.route)},
+            styleChoice=styleChoice
         )
     }
 }
 
 @ExperimentalMaterialApi
 @Composable
-fun GeneralSettingItem(icon: Int, mainText: String, subText: String, onClick: () -> Unit) {
+fun GeneralSettingItem(icon: Int, mainText: String, subText: String, onClick: () -> Unit,styleChoice:Style) {
     Card(
         onClick = { onClick() },
-        backgroundColor = Color.White,
         modifier = Modifier
             .padding(bottom = 8.dp)
-            .fillMaxWidth(),
+            .fillMaxWidth()
+            .background(styleChoice.backgroundColor),
         elevation = 0.dp,
     ) {
-        Row(
-            modifier = Modifier.padding(vertical = 10.dp, horizontal = 14.dp),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween
-        ) {
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                Box(
-                    modifier = Modifier
-                        .size(34.dp)
+            Row(
+                modifier = Modifier.background(styleChoice.backgroundColor),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Box(
+                        modifier = Modifier
+                            .size(34.dp).background(styleChoice.backgroundColor)
                         //.clip(shape = Shapes.medium)
                         //.background(LightPrimaryColor)
-                ) {
-                    Icon(
-                        painter = painterResource(id = icon),
-                        contentDescription = "",
-                        tint = Color.Unspecified,
-                        modifier = Modifier.padding(8.dp)
-                    )
-                }
+                    ) {
+                        Icon(
+                            painter = painterResource(id = icon),
+                            contentDescription = "",
+                            tint = Color.Unspecified,
+                            modifier = Modifier.padding(8.dp)
+                        )
+                    }
 
-                Spacer(modifier = Modifier.width(14.dp))
-                Column(
-                    modifier = Modifier.offset(y = (2).dp)
-                ) {
-                    Text(
-                        text = mainText,
-                        //fontFamily = Poppins,
-                        //color = SecondaryColor,
-                        fontSize = 14.sp,
-                        fontWeight = FontWeight.Bold,
-                    )
+                    Spacer(modifier = Modifier.width(14.dp))
+                    Column(
+                        modifier = Modifier.offset(y = (2).dp)
+                            .background(styleChoice.backgroundColor)
+                    ) {
+                        Text(
+                            text = mainText,
+                            //fontFamily = Poppins,
+                            color = styleChoice.textColor,
+                            fontSize = 14.sp,
+                            fontWeight = FontWeight.Bold,
+                        )
 
-                    Text(
-                        text = subText,
-                        //fontFamily = Poppins,
-                        color = Color.Gray,
-                        fontSize = 10.sp,
-                        fontWeight = FontWeight.SemiBold,
-                        modifier = Modifier.offset(y = (-4).dp)
-                    )
+                        Text(
+                            text = subText,
+                            //fontFamily = Poppins,
+                            color = styleChoice.textColor,
+                            fontSize = 10.sp,
+                            fontWeight = FontWeight.SemiBold,
+                            modifier = Modifier.offset(y = (-4).dp)
+                        )
+                    }
                 }
+                Icon(
+                    painter = painterResource(id = R.drawable.ic_right_arrow),
+                    contentDescription = "",
+                    modifier = Modifier.size(16.dp)
+                )
+
             }
-            Icon(
-                painter = painterResource(id = R.drawable.ic_right_arrow),
-                contentDescription = "",
-                modifier = Modifier.size(16.dp)
-            )
-
-        }
     }
 }
 
 @ExperimentalMaterialApi
 @Composable
-fun SupportOptionsUI() {
+fun SupportOptionsUI(navController:NavController,styleChoice:Style) {
     Column(
         modifier = Modifier
             .padding(horizontal = 14.dp)
@@ -240,33 +265,39 @@ fun SupportOptionsUI() {
             fontSize = 14.sp,
             fontWeight = FontWeight.Bold,
             modifier = Modifier
-                .padding(vertical = 8.dp)
+                .padding(vertical = 8.dp),
+            style = MaterialTheme.typography.body1.copy(
+                color=styleChoice.textColor
+            )
         )
-
+        Divider(color=styleChoice.textColor)
         SupportItem(
             icon = R.drawable.ic_feedback,
             mainText = "Feedback",
-            onClick = {}
+            onClick = {},
+            styleChoice = styleChoice
         )
         SupportItem(
             icon = R.drawable.ic_privacy_policy,
             mainText = "Privacy Policy",
-            onClick = {}
+            onClick = {},
+            styleChoice = styleChoice
         )
         SupportItem(
             icon = R.drawable.ic_about,
             mainText = "About",
-            onClick = {}
+            onClick = {},
+            styleChoice = styleChoice
         )
     }
 }
 
 @ExperimentalMaterialApi
 @Composable
-fun SupportItem(icon: Int, mainText: String, onClick: () -> Unit) {
+fun SupportItem(icon: Int, mainText: String, onClick: () -> Unit,styleChoice:Style) {
     Card(
         onClick = { onClick() },
-        backgroundColor = Color.White,
+        backgroundColor = styleChoice.backgroundColor,
         modifier = Modifier
             .padding(bottom = 8.dp)
             .fillMaxWidth(),
@@ -302,12 +333,16 @@ fun SupportItem(icon: Int, mainText: String, onClick: () -> Unit) {
 //                    color = SecondaryColor,
                     fontSize = 14.sp,
                     fontWeight = FontWeight.Bold,
+                    style=MaterialTheme.typography.body1.copy(
+                        color=styleChoice.textColor
+                    )
                 )
             }
             Icon(
                 painter = painterResource(id = R.drawable.ic_right_arrow),
                 contentDescription = "",
-                modifier = Modifier.size(16.dp)
+                modifier = Modifier.size(16.dp),
+                tint = styleChoice.textColor
             )
 
         }

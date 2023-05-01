@@ -67,6 +67,14 @@ fun TextScreen(navController: NavController) {
             getFloatValueByKey(context.dataStore,"font_slider_position")
         }
     }
+    var styleChoice = remember{mutableStateOf(Style(Color.White,Color.Black,Color(0xE1E8E3)))}
+    LaunchedEffect("style_choice")
+    {
+        styleChoice.value = withContext(Dispatchers.IO)
+        {
+            styleDictionary(getStringValueByKey(context.dataStore,"style_choice"))
+        }
+    }
     var scaffoldState = rememberScaffoldState()
     var fontDisplay by remember{mutableStateOf(defaultFontSize+(defaultFontSize*sliderPosition).toInt())}
     var progressCount: Int by remember { mutableStateOf(0) }
@@ -99,7 +107,7 @@ fun TextScreen(navController: NavController) {
         )
     )
 
-    Surface(modifier=Modifier.background(Color.White))
+    Surface(modifier=Modifier.background(styleChoice.value.backgroundColor))
     {
         androidx.compose.material.Scaffold(
             scaffoldState=scaffoldState,
@@ -115,9 +123,10 @@ fun TextScreen(navController: NavController) {
                             scaffoldState.snackbarHostState.showSnackbar("Font size saved!")
                         }
                     },
-                    backgroundColor = Color.Black,
-                    contentColor = Color.White,
-                )}
+                    contentColor = styleChoice.value.backgroundColor,
+                    backgroundColor = styleChoice.value.textColor,
+                )},
+            backgroundColor = styleChoice.value.backgroundColor
         )
         {
             Column(
@@ -127,7 +136,7 @@ fun TextScreen(navController: NavController) {
                 Text(
                     text="Font Sizing",
                     style=MaterialTheme.typography.titleLarge.copy(
-                        color = Color.Black
+                        color = styleChoice.value.textColor
                     )
                 )
                 Row(modifier = Modifier.widthIn(min = 300.dp).fillMaxWidth(size).padding(10.dp))
@@ -136,11 +145,11 @@ fun TextScreen(navController: NavController) {
                         text = "Use the scroller below. Changes will reflect in this text. \n Current size: ${currentFontSize}",
                         style = TextStyle(
                             fontSize = (defaultFontSize + (defaultFontSize * sliderPosition)).toInt().em,
-                            color = Color.Black
+                            color = styleChoice.value.textColor
                         )
                     )
                 }
-                Divider(startIndent=8.dp)
+                Divider(startIndent=8.dp,color=styleChoice.value.textColor)
                 // for the text above the progressBar
                 Row(
                     modifier = Modifier

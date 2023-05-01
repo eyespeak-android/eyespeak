@@ -34,22 +34,27 @@ private var cameraProvider : ProcessCameraProvider? = null
 fun TopAppBar(
     title: String,
     drawerState: DrawerState,
-    scope: CoroutineScope
+    scope: CoroutineScope,
+    styleChoice:Style
 )
 {
-    Row(
-        modifier = Modifier.fillMaxWidth().padding(10.dp)
-    )
+    Surface(modifier=Modifier.background(styleChoice.backgroundColor))
     {
-        Icon(
-            imageVector = Icons.Filled.Menu,
-            contentDescription="Menu Icon",
-            tint = Color.Black,
-            modifier = Modifier.size(40.dp).clickable
-            {
-                scope.launch{drawerState.open()}
-            },
+        Row(
+            modifier = Modifier.fillMaxWidth().padding(10.dp)
+                .background(styleChoice.backgroundColor)
         )
+        {
+            Icon(
+                imageVector = Icons.Filled.Menu,
+                contentDescription = "Menu Icon",
+                tint = styleChoice.textColor,
+                modifier = Modifier.size(40.dp).clickable
+                {
+                    scope.launch { drawerState.open() }
+                },
+            )
+        }
     }
 }
 
@@ -65,7 +70,7 @@ fun HomeScreen(navController: NavController,context:MainActivity) {
             )
         val selectedItem = remember{mutableStateOf(drawerRoutes[0])}
         val drawerState = rememberDrawerState(initialValue= DrawerValue.Closed)
-        var textResponse by remember{mutableStateOf("This is where the text will appear.")}
+        var textResponse by remember{mutableStateOf("Tap the camera screen above to get started!")}
         var currentFontSize by remember{mutableStateOf(8)}
         LaunchedEffect("default_font_size")
         {
@@ -74,12 +79,20 @@ fun HomeScreen(navController: NavController,context:MainActivity) {
                 getIntValueByKey(context.dataStore,"default_font_size")
             }
         }
+        var styleChoice = remember{mutableStateOf(Style(Color.White,Color.Black,Color(0xE1E8E3)))}
+        LaunchedEffect("style_choice")
+        {
+            styleChoice.value = withContext(Dispatchers.IO)
+            {
+                styleDictionary(getStringValueByKey(context.dataStore,"style_choice"))
+            }
+        }
         val scope = rememberCoroutineScope()
         ModalNavigationDrawer(
             drawerState= drawerState,
             drawerContent = {
                Surface(
-                   color=Color.White,
+                   color=styleChoice.value.backgroundColor,
                    modifier=Modifier.fillMaxSize()
                )
                {
@@ -111,22 +124,22 @@ fun HomeScreen(navController: NavController,context:MainActivity) {
                 Column(
                     modifier = Modifier
                         .fillMaxSize()
-                        .background(Color.White),
+                        .background(styleChoice.value.backgroundColor),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    TopAppBar("App bar",drawerState,scope)
+                    TopAppBar("App bar",drawerState,scope,styleChoice.value)
                     SimpleCameraPreview(context=context,textResponse=textResponse,responseChange={newResponse->textResponse=newResponse})
                     Row(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(10.dp),
+                            .background(styleChoice.value.backgroundColor),
                         horizontalArrangement = Arrangement.Center
                     ) {
                         Text(
                             text = textResponse,
                             fontWeight = FontWeight.Bold,
                             style = MaterialTheme.typography.bodySmall.copy(
-                                color = Color.Black,
+                                color = styleChoice.value.textColor,
                                 fontSize=currentFontSize.em,
                                 lineHeight=25.sp,
                             )

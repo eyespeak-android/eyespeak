@@ -179,6 +179,14 @@ private val language = listOf("English", "Italian")
         if (chosenLanguage != null) {
             println(chosenLanguage.javaClass.name)
         }
+        var styleChoice = remember{mutableStateOf(Style(Color.White,Color.Black,Color(0xE1E8E3)))}
+        LaunchedEffect("style_choice")
+        {
+            styleChoice.value = withContext(Dispatchers.IO)
+            {
+                styleDictionary(getStringValueByKey(context.dataStore,"style_choice"))
+            }
+        }
         println("Languages: $supportedLanguages")
         var toExpanded by remember{mutableStateOf(false)}
         var fromExpanded by remember{mutableStateOf(false)}
@@ -199,7 +207,7 @@ private val language = listOf("English", "Italian")
                 allLanguages.get(getStringValueByKey(context.dataStore,"to_language")).toString()
             }
         }
-        Surface(modifier= Modifier.background(Color.White).fillMaxSize())
+        Surface(modifier= Modifier.background(styleChoice.value.backgroundColor).fillMaxSize())
         {
             Scaffold(
                 scaffoldState=scaffoldState,
@@ -222,38 +230,43 @@ private val language = listOf("English", "Italian")
                                 scaffoldState.snackbarHostState.showSnackbar("Language changes saved!")
                             }
                         },
-                        backgroundColor=Color.Black,
-                        contentColor=Color.White,
+                        backgroundColor=styleChoice.value.textColor,
+                        contentColor=styleChoice.value.backgroundColor,
                     )
 
-                }
+                },
+                backgroundColor = styleChoice.value.backgroundColor
+
             )
             {
                 Column(horizontalAlignment = Alignment.CenterHorizontally)
                 {
                     Text(
                         style = MaterialTheme.typography.h4.copy(
-                            fontWeight = FontWeight.Bold
+                            fontWeight = FontWeight.Bold,
+                            color = styleChoice.value.textColor
                         ), text = "Language Settings"
                     )
                     Box(modifier = Modifier.fillMaxWidth().padding(16.dp))
                     {
                         ExposedDropdownMenuBox(
                             expanded = fromExpanded,
-                            onExpandedChange = { fromExpanded = !fromExpanded })
+                            onExpandedChange = { fromExpanded = !fromExpanded },
+                            modifier=Modifier.border(width=1.dp,color=styleChoice.value.textColor))
+
                         {
 
                             TextField(
                                 readOnly = true,
                                 value = fromLanguageChoice.value,
                                 onValueChange = { },
-                                label = { Text("From") },
+                                label = { Text("From",color=styleChoice.value.textColor) },
                                 trailingIcon = {
                                     ExposedDropdownMenuDefaults.TrailingIcon(
-                                        expanded = fromExpanded
+                                        expanded = toExpanded
                                     )
                                 },
-                                colors = ExposedDropdownMenuDefaults.textFieldColors()
+                                colors = ExposedDropdownMenuDefaults.textFieldColors(styleChoice.value.textColor),
                             )
                             ExposedDropdownMenu(
                                 expanded = fromExpanded,
@@ -279,20 +292,21 @@ private val language = listOf("English", "Italian")
                     {
                         ExposedDropdownMenuBox(
                             expanded = toExpanded,
-                            onExpandedChange = { toExpanded = !toExpanded })
+                            onExpandedChange = { toExpanded = !toExpanded },
+                        modifier=Modifier.border(width=1.dp,color=styleChoice.value.textColor))
                         {
 
                             TextField(
                                 readOnly = true,
                                 value = toLanguageChoice.value,
                                 onValueChange = { },
-                                label = { Text("To") },
+                                label = { Text("To",color=styleChoice.value.textColor) },
                                 trailingIcon = {
                                     ExposedDropdownMenuDefaults.TrailingIcon(
                                         expanded = toExpanded
                                     )
                                 },
-                                colors = ExposedDropdownMenuDefaults.textFieldColors()
+                                colors = ExposedDropdownMenuDefaults.textFieldColors(styleChoice.value.textColor),
                             )
                             ExposedDropdownMenu(
                                 expanded = toExpanded,

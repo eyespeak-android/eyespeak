@@ -13,18 +13,33 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.foundation.Image
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
 @Composable
 fun LandingScreen(navController: NavController) {
+    val context = LocalContext.current
+    var styleChoice = remember{ mutableStateOf(Style(Color.White,Color.Black,Color(0xE1E8E3))) }
+    LaunchedEffect("style_choice")
+    {
+        styleChoice.value = withContext(Dispatchers.IO)
+        {
+            styleDictionary(getStringValueByKey(context.dataStore,"style_choice"))
+        }
+    }
     MaterialTheme{
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color.White),
+            .background(styleChoice.value.backgroundColor),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
@@ -58,7 +73,7 @@ fun LandingScreen(navController: NavController) {
             }
             Button(
                 shape = RoundedCornerShape(18),
-                modifier = Modifier.padding(16.dp).height(60.dp).width(160.dp).border(width=2.dp,color=Color.Black,shape=RoundedCornerShape(18)),
+                modifier = Modifier.padding(16.dp).height(60.dp).width(160.dp).border(width=2.dp,color=Color.White,shape=RoundedCornerShape(18)),
                 onClick={navController.navigate(Screens.Register.route)},
                 colors = ButtonDefaults.buttonColors(Color.Black)
             ) {
