@@ -105,7 +105,7 @@ https://user-images.githubusercontent.com/104329626/229892092-615a6c07-4e6e-4ff0
 
 https://user-images.githubusercontent.com/104329626/234138140-b1cffb9d-90f1-4fe9-9fdd-c177c63faaaa.mp4
 
-
+# Milestone 6
 
 https://user-images.githubusercontent.com/104329626/234138166-66a20d6e-40b9-4e08-a6bc-338037fdad37.mp4
 
@@ -113,6 +113,7 @@ https://user-images.githubusercontent.com/104329626/234138166-66a20d6e-40b9-4e08
 
 https://user-images.githubusercontent.com/104329626/233448526-5c8a03ac-82e2-4976-a059-0d5bbd794ebb.mp4
 
+# Milestone 7
 
 https://user-images.githubusercontent.com/104329626/234137671-295d01ed-bd82-4896-96a8-4c3d3741d6a7.mp4
 
